@@ -1,11 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
     <footer className="text-gray-600 body-font border-t-2">
       <div className="container px-5 py-24 mx-auto flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
         <div className="w-64 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left">
-          <a className="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
+          <Link className="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -19,7 +20,7 @@ const Footer = () => {
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
             </svg>
             <span className="ml-3 text-xl">Tailblocks</span>
-          </a>
+          </Link>
           <p className="mt-2 text-sm text-gray-500">
             Air plant banjo lyft occupy retro adaptogen indego
           </p>
@@ -106,15 +107,15 @@ const Footer = () => {
       <div className="bg-gray-100">
         <div className="container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row">
           <p className="text-gray-500 text-sm text-center sm:text-left">
-            © 2020 Tailblocks —
-            <a
+            © 2023 YOSI —
+            <Link
               href="https://twitter.com/knyttneve"
               rel="noopener noreferrer"
               className="text-gray-600 ml-1"
               target="_blank"
             >
-              @knyttneve
-            </a>
+              @toyorcee
+            </Link>
           </p>
           <span className="inline-flex sm:ml-auto sm:mt-0 mt-2 justify-center sm:justify-start">
             <a className="text-gray-500">
@@ -155,7 +156,7 @@ const Footer = () => {
                 <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"></path>
               </svg>
             </a>
-            <a className="ml-3 text-gray-500">
+            <Link className="ml-3 text-gray-500">
               <svg
                 fill="currentColor"
                 stroke="currentColor"
@@ -171,7 +172,7 @@ const Footer = () => {
                 ></path>
                 <circle cx="4" cy="4" r="2" stroke="none"></circle>
               </svg>
-            </a>
+            </Link>
           </span>
         </div>
       </div>

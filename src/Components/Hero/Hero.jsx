@@ -1,4 +1,5 @@
 import React from "react";
+import ecommerce from "../../Assets/ecomm.webp"
 
 const Hero = () => {
   return (
@@ -29,7 +30,7 @@ const Hero = () => {
           <img
             className="object-cover object-center rounded"
             alt="hero"
-            src="https://dummyimage.com/720x600"
+            src={ecommerce}
           />
         </div>
       </div>
