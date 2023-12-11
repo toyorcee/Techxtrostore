@@ -1,8 +1,17 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Cart = () => {
-  const carts = JSON.parse(localStorage.getItem("cart"));
+  const navigate = useNavigate();
+  const [total, setTotal] = useState(0);
+  const carts = JSON.parse(localStorage.getItem("cart")) || [];
+
+  useEffect(() => {
+    const total = carts.reduce((acc, item) => {
+      return acc + item.price * item.quantity;
+    }, 0);
+    setTotal(total);
+  }, [carts]);
 
   const handleIncrease = (id) => {
     const updatedCart = carts.map((item) => {
@@ -15,6 +24,7 @@ const Cart = () => {
       return item;
     });
     localStorage.setItem("cart", JSON.stringify(updatedCart));
+    navigate("/cart");
   };
 
   const handleDecrease = (id) => {
@@ -28,9 +38,18 @@ const Cart = () => {
       return item;
     });
     localStorage.setItem("cart", JSON.stringify(updatedCart));
+    navigate("/cart");
   };
 
-  if (!carts.length) <div>Cart is Empty</div>;
+  const removeProduct = (id) => {
+    const updatedCart = carts.filter((item) => item.id !== id);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    navigate("/cart");
+  };
+
+  if (carts.length === 0) {
+    return <div className=" h-[40vh] flex justify-center items-center align-items-center text-4xl">Cart is Empty</div>;
+  }
 
   return (
     <div className="container mx-auto mt-10">
@@ -68,7 +87,8 @@ const Cart = () => {
                     </span>
                     <div
                       href="#"
-                      className="font-semibold hover:text-red-500 text-gray-500 text-xs"
+                      className="font-semibold hover:text-red-500 text-gray-500 text-xs cursor-pointer"
+                      onClick={() => removeProduct(cart?.id)}
                     >
                       Remove
                     </div>
@@ -129,14 +149,14 @@ const Cart = () => {
             <span className="font-semibold text-sm uppercase">
               Items {carts?.length}
             </span>
-            <span className="font-semibold text-sm">590$</span>
+            <span className="font-semibold text-sm">${total?.toFixed(2)}</span>
           </div>
           <div>
             <label className="font-medium inline-block mb-3 text-sm uppercase">
               Shipping
             </label>
             <select className="block p-2 text-gray-600 w-full text-sm">
-              <option>Standard shipping - $10.00</option>
+              <option>Standard shipping - $10.24</option>
             </select>
           </div>
           <div className="py-10">
@@ -159,7 +179,7 @@ const Cart = () => {
           <div className="border-t mt-8">
             <div className="flex font-semibold justify-between py-6 text-sm uppercase">
               <span>Total cost</span>
-              <span>$600</span>
+              <span>${(total + 10.24).toFixed(2)}</span>
             </div>
             <button className="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full">
               Checkout

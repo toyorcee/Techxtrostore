@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Hero from "../../Components/Hero/Hero";
-import Products from "../Products/Products";
 import Categories from "../../Components/Categories/Categories";
 import ProductsCard from "../../Components/ProductsCard/ProductsCard";
 import StatCard from "../../Components/StatCard/StatCard";
@@ -35,7 +34,6 @@ const Home = () => {
       ) : (
         <div>Loading...</div>
       )}
-      <Products />
       <StatCard />
   </>
   );
