@@ -1,9 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "./Footer.css";
 
 const Footer = () => {
   return (
-    <footer className="text-gray-600 body-font border-t-2">
+    <footer className="text-white body-font border-t-2 bg-indigo-500/80">
       <div className="container px-5 py-24 mx-auto flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
         <div className="w-64 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left">
           <Link className="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
@@ -21,15 +22,15 @@ const Footer = () => {
             </svg>
             <span className="ml-3 text-xl">Tailblocks</span>
           </Link>
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-2 text-sm text-white">
             Air plant banjo lyft occupy retro adaptogen indego
           </p>
         </div>
         <div className="flex-grow flex flex-wrap md:pl-20 -mb-10 md:mt-0 mt-10 md:text-left text-center">
           <div className="lg:w-1/4 md:w-1/2 w-full px-4">
-            <h2 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">
+            <h3 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">
               CATEGORIES
-            </h2>
+            </h3>
             <nav className="list-none mb-10">
               <li>
                 <a className="text-gray-600 hover:text-gray-800">First Link</a>
@@ -46,9 +47,9 @@ const Footer = () => {
             </nav>
           </div>
           <div className="lg:w-1/4 md:w-1/2 w-full px-4">
-            <h2 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">
+            <h3 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">
               CATEGORIES
-            </h2>
+            </h3>
             <nav className="list-none mb-10">
               <li>
                 <a className="text-gray-600 hover:text-gray-800">First Link</a>
@@ -65,9 +66,9 @@ const Footer = () => {
             </nav>
           </div>
           <div className="lg:w-1/4 md:w-1/2 w-full px-4">
-            <h2 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">
+            <h3 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">
               CATEGORIES
-            </h2>
+            </h3>
             <nav className="list-none mb-10">
               <li>
                 <a className="text-gray-600 hover:text-gray-800">First Link</a>
@@ -84,9 +85,9 @@ const Footer = () => {
             </nav>
           </div>
           <div className="lg:w-1/4 md:w-1/2 w-full px-4">
-            <h2 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">
+            <h3 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">
               CATEGORIES
-            </h2>
+            </h3>
             <nav className="list-none mb-10">
               <li>
                 <a className="text-gray-600 hover:text-gray-800">First Link</a>
@@ -168,7 +169,7 @@ const Footer = () => {
               >
                 <path
                   stroke="none"
-                  d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"
+                  d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12h3z"
                 ></path>
                 <circle cx="4" cy="4" r="2" stroke="none"></circle>
               </svg>

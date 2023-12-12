@@ -1,4 +1,16 @@
-@media screen and (max-width: 414px) and (min-width: 1px) {
+@media screen and (max-width: 427px) and (min-width: 1px) {
+  #fdc {
+    flex-direction: column;
+  }
+  #btns {
+    padding-top: 40px;
+  }
+  #top {
+    padding-top: 20px;
+  }
+}
+
+@media screen and (max-width: 1280px) and (min-width: 1024px) {
   #fdc {
     flex-direction: column;
   }
