@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import "./Cart.css";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -48,12 +49,16 @@ const Cart = () => {
   };
 
   if (carts.length === 0) {
-    return <div className=" h-[40vh] flex justify-center items-center align-items-center text-4xl">Cart is Empty</div>;
+    return (
+      <div className=" h-[40vh] flex justify-center items-center align-items-center text-4xl">
+        Cart is Empty
+      </div>
+    );
   }
 
   return (
     <div className="container mx-auto mt-10">
-      <div className="flex shadow-md my-10">
+      <div className="flex shadow-md my-10" id="flexd">
         <div className="w-3/4 bg-white px-10 py-10">
           <div className="flex justify-between border-b pb-8">
             <h1 className="font-semibold text-2xl">Shopping Cart</h1>
