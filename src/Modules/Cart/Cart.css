@@ -2,4 +2,10 @@
   #flexd {
     flex-direction: column;
   }
+  #summary{
+    width: 100%;
+  }
+  #big{
+    width: 100%;
+  }
 }
