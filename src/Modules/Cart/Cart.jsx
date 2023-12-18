@@ -92,7 +92,7 @@ const Cart = () => {
                     </span>
                     <div
                       href="#"
-                      className="font-semibold hover:text-red-500 text-gray-500 text-xs cursor-pointer"
+                      className="font-semibold hover:text-red-500 text-blue-500 text-xs cursor-pointer"
                       onClick={() => removeProduct(cart?.id)}
                     >
                       Remove
