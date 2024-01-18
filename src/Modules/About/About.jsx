@@ -24,25 +24,25 @@ const About = () => {
             <h2 className="title-font font-medium text-3xl text-gray-900">
               2.7K
             </h2>
-            <p className="leading-relaxed">Users</p>
+            <p className="leading-relaxed text-[#F05804]">Users</p>
           </div>
           <div className="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
             <h2 className="title-font font-medium text-3xl text-gray-900">
               1.8K
             </h2>
-            <p className="leading-relaxed">Subscribes</p>
+            <p className="leading-relaxed text-[#F05804]">Subscribes</p>
           </div>
           <div className="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
             <h2 className="title-font font-medium text-3xl text-gray-900">
               450k
             </h2>
-            <p className="leading-relaxed">Purchases</p>
+            <p className="leading-relaxed text-[#F05804]">Purchases</p>
           </div>
           <div className="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
             <h2 className="title-font font-medium text-3xl text-gray-900">
               1200
             </h2>
-            <p className="leading-relaxed">Products</p>
+            <p className="leading-relaxed text-[#F05804]">Products</p>
           </div>
         </div>
         <div className="lg:w-1/2 sm:w-1/3 w-full rounded-lg overflow-hidden mt-6 sm:mt-0">
