@@ -65,16 +65,16 @@ const Cart = () => {
             <h2 className="font-semibold text-2xl">{carts?.length} Items</h2>
           </div>
           <div className="flex mt-10 mb-5">
-            <h3 className="font-semibold text-[#F05804] text-xs uppercase w-2/5">
+            <h3 className="font-semibold text-[#3559E0] text-xs uppercase w-2/5">
               Product Details
             </h3>
-            <h3 className="font-semibold text-center text-[#F05804] text-xs uppercase w-1/5">
+            <h3 className="font-semibold text-center text-[#3559E0] text-xs uppercase w-1/5">
               Quantity
             </h3>
-            <h3 className="font-semibold text-center text-[#F05804] text-xs uppercase w-1/5">
+            <h3 className="font-semibold text-center text-[#3559E0] text-xs uppercase w-1/5">
               Price
             </h3>
-            <h3 className="font-semibold text-center text-[#F05804]gray-600 text-xs uppercase w-1/5">
+            <h3 className="font-semibold text-center text-[#3559E0]gray-600 text-xs uppercase w-1/5">
               Total
             </h3>
           </div>
@@ -134,10 +134,10 @@ const Cart = () => {
 
           <Link
             to={"/products"}
-            className="flex font-semibold text-[#F05804] text-sm mt-10"
+            className="flex font-semibold text-[#3559E0] text-sm mt-10"
           >
             <svg
-              className="fill-current mr-2 text-[#9A031E] w-4"
+              className="fill-current mr-2 text-[#3559E0] w-4"
               viewBox="0 0 448 512"
             >
               <path d="M134.059 296H436c6.627 0 12-5.373 12-12v-56c0-6.627-5.373-12-12-12H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.569 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296z" />
@@ -178,7 +178,7 @@ const Cart = () => {
               className="p-2 text-sm w-full"
             />
           </div>
-          <button className="bg-[#9A031E] hover:bg-[#F05804] px-5 py-2 text-sm text-white uppercase">
+          <button className="bg-[#0F2167] hover:bg-[#3559E0] px-5 py-2 text-sm text-white uppercase">
             Apply
           </button>
           <div className="border-t mt-8">
@@ -186,7 +186,7 @@ const Cart = () => {
               <span>Total cost</span>
               <span>${(total + 10.24).toFixed(2)}</span>
             </div>
-            <button className="bg-[#9A031E] font-semibold hover:bg-[#F05804] py-3 text-sm text-white uppercase w-full">
+            <button className="bg-[#0F2167] font-semibold hover:bg-[#3559E0] py-3 text-sm text-white uppercase w-full">
               Checkout
             </button>
           </div>

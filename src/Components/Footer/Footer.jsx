@@ -4,7 +4,7 @@ import "./Footer.css";
 
 const Footer = () => {
   return (
-    <footer className="text-white body-font border-t-2 bg-[#9A031E]">
+    <footer className="text-white body-font border-t-2 bg-[#3559E0]">
       <div className="container px-5 py-24 mx-auto flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
         <div className="w-64 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left">
           <Link className="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
@@ -15,12 +15,12 @@ const Footer = () => {
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              className="w-10 h-10 text-white p-2 bg-[#9A031E] rounded-full"
+              className="w-10 h-10 text-white p-2 bg-[#4CB9E7] rounded-full"
               viewBox="0 0 24 24"
             >
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
             </svg>
-            <span className="ml-3 text-3xl text-[#F05804]">YS</span>
+            <span className="ml-3 text-3xl text-[white]">YS</span>
           </Link>
           <p className="mt-2 text-xl text-white">
             <i>your favorite store</i>

@@ -219,13 +219,13 @@ const Product = () => {
               </div>
               <div className="flex justify-content-between" id="btns">
                 <button
-                  className="flex ml-auto text-white bg-[#9A031E] border-0 py-2 px-6 focus:outline-none hover:bg-[#F05804] rounded-full mr-2"
+                  className="flex ml-auto text-white bg-[#0F2167] border-0 py-2 px-6 focus:outline-none hover:bg-[#3559E0] rounded-full mr-2"
                   onClick={() => handleCart(product, true)}
                 >
                   BUY NOW
                 </button>
                 <button
-                  className="flex ml-auto border-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-[#F05804]  hover:text-white rounded-full"
+                  className="flex ml-auto border-[#3559E0] border-0 py-2 px-6 focus:outline-none hover:bg-[#3559E0]  hover:text-white rounded-full"
                   onClick={() => handleCart(product)}
                 >
                   ADD TO CART

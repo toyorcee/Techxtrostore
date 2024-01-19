@@ -94,7 +94,7 @@ const Contact = () => {
           <h1 className="title-font font-medium text-3xl mb-2 text-gray-900 font-weight: 800">
             CONTACT US
           </h1>
-          <p className="lg:w-2/3 mx-auto leading-relaxed text-[#F05804]">
+          <p className="lg:w-2/3 mx-auto leading-relaxed text-[#3559E0]">
             Contact us for any help or support.
           </p>
         </div>
@@ -108,7 +108,7 @@ const Contact = () => {
             >
               <div className="p-2 w-full">
                 <div className="relative">
-                  <label for="name" className="leading-7 text-xl text-[#9A031E]">
+                  <label for="name" className="leading-7 text-xl text-[#0F2167]">
                     Name
                   </label>
                   <input
@@ -127,7 +127,7 @@ const Contact = () => {
                 <div className="relative">
                   <label
                     for="email"
-                    className="leading-7 text-xl text-[#9A031E]"
+                    className="leading-7 text-xl text-[#0F2167]"
                   >
                     Email
                   </label>
@@ -147,7 +147,7 @@ const Contact = () => {
                 <div className="relative">
                   <label
                     for="message"
-                    className="leading-7 text-xl text-[#9A031E]"
+                    className="leading-7 text-xl text-[#0F2167]"
                   >
                     Message
                   </label>
@@ -160,7 +160,7 @@ const Contact = () => {
               </div>
               <div className="p-2 w-full">
                 <button
-                  className="flex mx-auto text-white bg-[#9A031E] py-2 px-8 focus:outline-none rounded text-lg"
+                  className="flex mx-auto text-white bg-[#0F2167] py-2 px-8 focus:outline-none rounded text-lg"
                   onClick={(e) => sendEmail(e)}
                 >
                   SEND MESSAGE
@@ -169,7 +169,6 @@ const Contact = () => {
             </form>
           </div>
           <div className="p-2 w-full pt-8 mt-8 border-t border-gray-200 text-center">
-            <a className="text-[#F05804]">example@email.com</a>
             <p className="leading-normal my-5">
               49 Smith St.
               <br />
