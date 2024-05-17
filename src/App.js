@@ -9,6 +9,7 @@ import CategoryProducts from "./Modules/CategoryProducts/CategoryProducts";
 import Cart from "./Modules/Cart/Cart";
 import About from "./Modules/About/About";
 import Contact from "./Modules/Contact/Contact";
+import Donate from "./Components/Donate";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/checkout" element={<Donate />} />
       </Routes>
       <Footer />
     </div>
