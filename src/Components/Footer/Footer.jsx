@@ -1,182 +1,239 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./Footer.css";
+import { IconButton, Box, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { useSelector } from "react-redux";
 
 const Footer = () => {
+  const theme = useTheme();
+  const mode = useSelector((state) => state.theme.mode);
+
+  const footerStyles = {
+    backgroundColor:
+      mode === "dark"
+        ? theme.palette.primary.main
+        : theme.palette.background.default,
+    color:
+      mode === "dark" ? theme.palette.grey[10] : theme.palette.primary[900],
+    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+    padding: "1rem 2rem",
+  };
+
+  const linkStyles = {
+    textDecoration: "none",
+    color:
+      mode === "dark"
+        ? theme.palette.neutral.light
+        : theme.palette.primary.light,
+    marginBottom: "0.5rem",
+  };
+
+  const subtitleStyle = {
+    color:
+      mode === "dark" ? theme.palette.neutral.light : theme.palette.grey[1000],
+  };
+
+  const headerStyle = {
+    color:
+      mode === "dark"
+        ? theme.palette.neutral.light
+        : theme.palette.primary.light,
+  };
+
+  const IconStyle = {
+    color: mode === "dark" ? "white" : theme.palette.primary.main,
+  };
+
+  const footerLinks = [
+    {
+      title: "CATEGORIES",
+      links: ["Men", "Women", "Jewelery", "Gadgets"],
+    },
+    {
+      title: "SUPPORT",
+      links: ["Contact Us", "FAQ", "Returns", "Shipping"],
+    },
+    {
+      title: "COMPANY",
+      links: ["About Us", "Careers", "Privacy Policy", "Terms of Service"],
+    },
+    {
+      title: "SOCIAL MEDIA",
+      links: ["Facebook", "Twitter", "Instagram", "LinkedIn"],
+    },
+  ];
+
+  const iconData = [
+    {
+      id: 1,
+      path: "M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z",
+      fill: "currentColor",
+      viewBox: "0 0 24 24",
+    },
+    {
+      id: 2,
+      path: "M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z",
+      fill: "currentColor",
+      viewBox: "0 0 24 24",
+    },
+    {
+      id: 3,
+      rect: (
+        <rect
+          width="20"
+          height="20"
+          x="2"
+          y="2"
+          rx="5"
+          ry="5"
+          fill="none"
+        ></rect>
+      ),
+      path: "M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01",
+      fill: "none",
+      stroke: "currentColor",
+      viewBox: "0 0 24 24",
+    },
+  ];
+
   return (
-    <footer className="text-white body-font border-t-2 bg-[#3559E0]">
-      <div className="container px-5 py-24 mx-auto flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
-        <div className="w-64 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left">
-          <Link className="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              className="w-10 h-10 text-white p-2 bg-[#0F2167] rounded-full"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-            </svg>
-            <span className="ml-3 text-3xl text-[white]">YS</span>
-          </Link>
-          <p className="mt-2 text-xl text-white">
-            <i>your favorite store</i>
-          </p>
-        </div>
-        <div className="flex-grow flex flex-wrap md:pl-20 -mb-10 md:mt-0 mt-10 md:text-left text-center">
-          <div className="lg:w-1/4 md:w-1/2 w-full px-4">
-            <h3 className=" font-medium text-[#F05804] text-sm mb-3">
-              CATEGORIES
-            </h3>
-            <nav className="list-none mb-10">
-              <li>
-                <a className="text-gray-600 hover:text-gray-800">First Link</a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-800">Second Link</a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-800">Third Link</a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-800">Fourth Link</a>
-              </li>
-            </nav>
-          </div>
-          <div className="lg:w-1/4 md:w-1/2 w-full px-4">
-            <h3 className=" font-medium text-[#F05804] tracking-widest text-sm mb-3">
-              CATEGORIES
-            </h3>
-            <nav className="list-none mb-10">
-              <li>
-                <a className="text-gray-600 hover:text-gray-800">First Link</a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-800">Second Link</a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-800">Third Link</a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-800">Fourth Link</a>
-              </li>
-            </nav>
-          </div>
-          <div className="lg:w-1/4 md:w-1/2 w-full px-4">
-            <h3 className="title-font font-medium text-[#F05804] text-sm mb-3">
-              CATEGORIES
-            </h3>
-            <nav className="list-none mb-10">
-              <li>
-                <a className="text-gray-600 hover:text-gray-800">First Link</a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-800">Second Link</a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-800">Third Link</a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-800">Fourth Link</a>
-              </li>
-            </nav>
-          </div>
-          <div className="lg:w-1/4 md:w-1/2 w-full px-4">
-            <h3 className="title-font font-medium text-[#F05804] tracking-widest text-sm mb-3">
-              CATEGORIES
-            </h3>
-            <nav className="list-none mb-10">
-              <li>
-                <a className="text-gray-600 hover:text-gray-800">First Link</a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-800">Second Link</a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-800">Third Link</a>
-              </li>
-              <li>
-                <a className="text-gray-600 hover:text-gray-800">Fourth Link</a>
-              </li>
-            </nav>
-          </div>
-        </div>
-      </div>
-      <div className="bg-gray-100">
-        <div className="container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row">
-          <p className="text-gray-500 text-sm text-center sm:text-left">
-            © 2023 YOSI —
-            <Link
-              href="https://twitter.com/knyttneve"
-              rel="noopener noreferrer"
-              className="text-[#F05804] ml-1"
-              target="_blank"
-            >
-              @toyorcee
-            </Link>
-          </p>
-          <span className="inline-flex sm:ml-auto sm:mt-0 mt-2 justify-center sm:justify-start">
-            <a className="text-gray-500">
+    <footer style={footerStyles}>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 3,
+          mb: 4,
+        }}
+      >
+        {/* Logo and description */}
+        <Box
+          sx={{
+            flex: "1 1 100%", // Full width on small screens
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center",
+            mb: { xs: 3, sm: 0 }, // Adjust margin at smaller screens
+          }}
+        >
+          <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+            <Box display="flex" alignItems="center" justifyContent="center">
               <svg
-                fill="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                className="w-5 h-5"
-                viewBox="0 0 24 24"
-              >
-                <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
-              </svg>
-            </a>
-            <a className="ml-3 text-gray-500">
-              <svg
-                fill="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                className="w-5 h-5"
-                viewBox="0 0 24 24"
-              >
-                <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
-              </svg>
-            </a>
-            <a className="ml-3 text-gray-500">
-              <svg
+                xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                className="w-5 h-5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                className="w-10 h-10"
+                style={{
+                  color: mode === "dark" ? "#F6F6F6" : "#0F2167",
+                  padding: "4px",
+                  borderRadius: "50%",
+                  backgroundColor: mode === "dark" ? "#0F2167" : "#F6F6F6",
+                }}
                 viewBox="0 0 24 24"
               >
-                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-                <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"></path>
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
               </svg>
-            </a>
-            <Link className="ml-3 text-gray-500">
-              <svg
-                fill="currentColor"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="0"
-                className="w-5 h-5"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="none"
-                  d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12h3z"
-                ></path>
-                <circle cx="4" cy="4" r="2" stroke="none"></circle>
-              </svg>
+              <Box ml={2}>
+                <Typography
+                  variant="h5"
+                  sx={{ ...headerStyle, fontWeight: "bold" }}
+                >
+                  TechXtro Store
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ ...subtitleStyle, fontStyle: "italic" }}
+                >
+                  Your Ultimate Tech and Lifestyle Store
+                </Typography>
+              </Box>
+            </Box>
+          </Link>
+        </Box>
+
+        {/* Footer Links */}
+        {footerLinks.map((section, index) => (
+          <Box
+            key={index}
+            sx={{
+              flex: "1 1 100%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              mb: 3,
+              [theme.breakpoints.up("sm")]: {
+                flex: "1 1 48%",
+              },
+              [theme.breakpoints.up("md")]: {
+                flex: "1 1 23%",
+              },
+            }}
+          >
+            <Typography
+              variant="body1"
+              sx={{ ...headerStyle, fontWeight: "bold", mb: 2 }}
+            >
+              {section.title}
+            </Typography>
+            {section.links.map((link, linkIndex) => (
+              <Link to="#" key={linkIndex} style={linkStyles}>
+                {link}
+              </Link>
+            ))}
+          </Box>
+        ))}
+      </Box>
+
+      {/* Footer Bottom */}
+      <Box sx={{ ...footerStyles, py: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+          }}
+        >
+          <Box
+            sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}
+          >
+            {iconData.map((icon) => (
+              <IconButton key={icon.id} sx={{ ...IconStyle }}>
+                <svg
+                  fill={icon.fill}
+                  stroke={icon.stroke || undefined}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  className="w-5 h-5"
+                  viewBox={icon.viewBox}
+                >
+                  {icon.rect ? icon.rect : null} <path d={icon.path}></path>
+                </svg>
+              </IconButton>
+            ))}
+          </Box>
+          <Typography variant="body2" sx={{ ...subtitleStyle }}>
+            <Link
+              href="https://twitter.com/knyttneve"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ color: "#F05804" }}
+            >
+              Sponsored by @techxtroverts
             </Link>
-          </span>
-        </div>
-      </div>
+            <Box sx={{ ...IconStyle }}>© {new Date().getFullYear()} </Box>
+          </Typography>
+        </Box>
+      </Box>
     </footer>
   );
 };

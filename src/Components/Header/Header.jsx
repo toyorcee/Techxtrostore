@@ -1,80 +1,91 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { IconButton, Box } from "@mui/material";
+import { WbSunny, Nightlight } from "@mui/icons-material";
+import { toggleMode } from "../../state/themeSlice";
 import { Link } from "react-router-dom";
+import { useTheme } from "@mui/material/styles";
 
 const navigations = [
-  {
-    name: "Home",
-    path: "/",
-  },
-
-  {
-    name: "Products",
-    path: "/products",
-  },
-
-  {
-    name: "About",
-    path: "/about",
-  },
-
-  {
-    name: "Contact",
-    path: "/contact",
-  },
+  { name: "Home", path: "/" },
+  { name: "Products", path: "/products" },
+  { name: "About", path: "/about" },
+  { name: "Contact", path: "/contact" },
 ];
 
 const Header = () => {
+  const mode = useSelector((state) => state.theme.mode); 
+  const dispatch = useDispatch();
+  const theme = useTheme();
+
+  const headerStyles = {
+    backgroundColor:
+      mode === "dark"
+        ? theme.palette.primary.main
+        : theme.palette.background.default,
+    color:
+      mode === "dark" ? theme.palette.grey[10] : theme.palette.primary[900], 
+    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+    padding: "1rem 2rem",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  };
+
+  const linkStyles = {
+    textDecoration: "none",
+    color: mode === "dark" ?  theme.palette.neutral.light :  theme.palette.primary.light, 
+    marginLeft: "1rem",
+  };
+
   return (
-    <header className="body-font shadow-lg bg-[#3559E0]">
-      <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-        <Link
-          to={"/"}
-          className="flex title-font cursor-pointer font-medium items-center text-900 mb-4 md:mb-0"
-        >
+    <Box component="header" style={headerStyles}>
+      {/* Logo */}
+      <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+        <Box display="flex" alignItems="center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            className="w-10 h-10 text-white p-2 bg-[#0F2167] rounded-full"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            className="w-10 h-10"
+            style={{
+              color: mode === "dark" ? "#F6F6F6" : "#0F2167",
+              padding: "4px",
+              borderRadius: "50%",
+              backgroundColor: mode === "dark" ? "#0F2167" : "#F6F6F6",
+            }}
             viewBox="0 0 24 24"
           >
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
           </svg>
-          <div className="grid">
-            <span className="ml-3 text-3xl text-[white]">YS</span>
-            <i className="text-sm text-white">your perfect store...</i>
-          </div>
-        </Link>
-        <nav className="md:ml-auto md:mr-auto flex flex-wrap items-center text-white justify-center">
-          {navigations.map((item) => {
-            return (
-              <Link to={item.path} className="mr-5 hover:text-white xl:text-1xl text-xl">
-                {item.name}
-              </Link>
-            );
-          })}
-        </nav>
-        <Link to={"/cart"}>
-          <button className="inline-flex items-center text-white bg-[#0F2167] border-0 py-2 px-4 focus:outline-none rounded-full text-base mt-4 md:mt-0">
-            Go to Cart
-            <svg
-              fill="none"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              className="w-4 h-4 ml-1"
-              viewBox="0 0 24 24"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7"></path>
-            </svg>
-          </button>
-        </Link>
-      </div>
-    </header>
+          <Box ml={2} style={linkStyles}>
+            <h1 style={{ margin: 0, fontSize: "1.5rem", fontWeight: "bold" }}>
+              TechXtro Store
+            </h1>
+            <p style={{ margin: 0, fontSize: "0.75rem", fontStyle: "italic" }}>
+              Your Ultimate Tech and Lifestyle Store
+            </p>
+          </Box>
+        </Box>
+      </Link>
+
+      {/* Navigation */}
+      <Box display="flex">
+        {navigations.map((nav) => (
+          <Link key={nav.name} to={nav.path} style={linkStyles}>
+            {nav.name}
+          </Link>
+        ))}
+      </Box>
+
+      {/* Toggle Button */}
+      <IconButton onClick={() => dispatch(toggleMode())} style={linkStyles}>
+        {mode === "light" ? <Nightlight /> : <WbSunny />}
+      </IconButton>
+    </Box>
   );
 };
 
