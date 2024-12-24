@@ -15,15 +15,18 @@ import Cart from "./Modules/Cart/Cart";
 import About from "./Modules/About/About";
 import Contact from "./Modules/Contact/Contact";
 import Donate from "./Components/Donate";
+import { Box } from "@mui/material";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const mode = useSelector((state) => state.mode); // Access current mode
-  const theme = createTheme(themeSettings(mode)); // Create Material UI theme based on mode
+  const mode = useSelector((state) => state.mode);
+  const theme = createTheme(themeSettings(mode));
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div>
+      <Box>
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -35,8 +38,9 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/checkout" element={<Donate />} />
         </Routes>
+        <ToastContainer />
         <Footer />
-      </div>
+      </Box>
     </ThemeProvider>
   );
 }

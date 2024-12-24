@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Card, CardContent, CardMedia, Typography, Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useSelector } from "react-redux";
@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 const ProductsCard = ({ products = [] }) => {
   const theme = useTheme();
   const mode = useSelector((state) => state.theme.mode);
+  const location = useLocation();
 
   const sectionStyles = {
     backgroundColor:
@@ -45,8 +46,12 @@ const ProductsCard = ({ products = [] }) => {
         : theme.palette.primary.light,
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
   return (
-    <section style={sectionStyles}>
+    <section className="product" style={sectionStyles}>
       <Box
         sx={{
           display: "flex",

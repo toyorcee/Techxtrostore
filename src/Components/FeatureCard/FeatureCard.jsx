@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const FeatureCard = ({ cards = [1, 2, 3] }) => {
   const theme = useTheme();
   const mode = useSelector((state) => state.theme.mode);
+  const location = useLocation();
 
   const sectionStyles = {
     backgroundColor:
@@ -75,10 +76,15 @@ const FeatureCard = ({ cards = [1, 2, 3] }) => {
     "women's clothing": "Stylish and versatile outfits for every occasion.",
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
   return (
     <section style={sectionStyles}>
-      <Box className="container px-5 py-5 mx-auto">
-        <Box className="flex flex-col text-center w-full mb-20">
+      {/* Header and Subtitle */}
+      <Box className="container px-5 py-1 mx-auto">
+        <Box className="flex flex-col text-center w-full py-2">
           <Typography
             variant="subtitle2"
             className="tracking-widest font-medium title-font mb-1"
@@ -94,74 +100,77 @@ const FeatureCard = ({ cards = [1, 2, 3] }) => {
             Explore Our Best Collections
           </Typography>
         </Box>
+      </Box>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-            gap: "1.5rem",
-          }}
-        >
-          {cards?.map((card, index) => {
-            return (
-              <div key={index}>
-                <Link to={`/categories/${card}`} className="cursor-pointer">
-                  <Card sx={cardContainerStyles}>
-                    <Box display="flex" alignItems="center" mb={2}>
-                      <Box sx={cardIconStyles} style={cardContentStyles}>
-                        <svg
-                          fill="none"
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          className="w-5 h-5"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-                        </svg>
-                      </Box>
-                      <Typography
-                        variant="h5"
-                        style={{ ...cardTextStyles, fontWeight: 600 }}
-                        className="capitalize"
+      {/* Cards Section */}
+      <Box
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+          gap: "1.5rem",
+          maxWidth: "auto",
+          margin: "0 auto",
+        }}
+      >
+        {cards?.map((card, index) => {
+          return (
+            <Box key={index}>
+              <Link to={`/categories/${card}`} className="cursor-pointer">
+                <Card sx={cardContainerStyles}>
+                  <Box display="flex" alignItems="center" mb={2}>
+                    <Box sx={cardIconStyles} style={cardContentStyles}>
+                      <svg
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        className="w-5 h-5"
+                        viewBox="0 0 24 24"
                       >
-                        {card}
-                      </Typography>
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                      </svg>
                     </Box>
-                    <CardContent>
-                      <Typography variant="body2" style={cardContentStyles}>
-                        {categoryDescriptions[card] ||
-                          "Description not available"}
-                      </Typography>
-                    </CardContent>
-                    <Box mt={2}>
-                      <Typography
-                        variant="body2"
-                        color="primary"
-                        sx={{ display: "flex", alignItems: "center" }}
-                        style={cardContentStyles}
+                    <Typography
+                      variant="h5"
+                      style={{ ...cardTextStyles, fontWeight: 600 }}
+                      className="capitalize"
+                    >
+                      {card}
+                    </Typography>
+                  </Box>
+                  <CardContent>
+                    <Typography variant="body2" style={cardContentStyles}>
+                      {categoryDescriptions[card] ||
+                        "Description not available"}
+                    </Typography>
+                  </CardContent>
+                  <Box mt={2}>
+                    <Typography
+                      variant="body2"
+                      color="primary"
+                      sx={{ display: "flex", alignItems: "center" }}
+                      style={cardContentStyles}
+                    >
+                      Learn More
+                      <svg
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        className="w-4 h-4 ml-2"
+                        viewBox="0 0 24 24"
                       >
-                        Learn More
-                        <svg
-                          fill="none"
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          className="w-4 h-4 ml-2"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M5 12h14M12 5l7 7-7 7"></path>
-                        </svg>
-                      </Typography>
-                    </Box>
-                  </Card>
-                </Link>
-              </div>
-            );
-          })}
-        </div>
+                        <path d="M5 12h14M12 5l7 7-7 7"></path>
+                      </svg>
+                    </Typography>
+                  </Box>
+                </Card>
+              </Link>
+            </Box>
+          );
+        })}
       </Box>
     </section>
   );

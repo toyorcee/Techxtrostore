@@ -3,14 +3,19 @@ import Hero from "../../Components/Hero/Hero";
 import Categories from "../../Components/Categories/Categories";
 import ProductsCard from "../../Components/ProductsCard/ProductsCard";
 import StatCard from "../../Components/StatCard/StatCard";
+import { useLocation } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { useSelector } from "react-redux";
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, CircularProgress } from "@mui/material";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const theme = useTheme();
   const mode = useSelector((state) => state.theme.mode);
+  const location = useLocation();
 
   const sectionStyles = {
     backgroundColor:
@@ -32,52 +37,91 @@ const Home = () => {
         : theme.palette.primary.light,
   };
 
+  const elementStyles = {
+    color:
+      mode === "dark"
+        ? theme.palette.neutral.light
+        : theme.palette.primary.light,
+  };
+
   useEffect(() => {
     const fetchProducts = async () => {
-      const response = await fetch(
-        "https://fakestoreapi.com/products?limit=12"
-      );
-      const data = await response.json();
-      setProducts(data);
+      try {
+        const response = await axios.get(
+          "https://fakestoreapi.com/products?limit=12"
+        );
+        setProducts(response.data);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        toast.error(
+          "Failed to fetch products!, Check your network connection and refresh."
+        );
+      }
     };
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
   return (
     <>
-      <Box sx={sectionStyles}>
-        <Hero />
-        <Categories />
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginTop: "20px",
-          }}
-        >
-          <Typography
-            variant="subtitle2"
-            className="tracking-widest font-medium title-font mb-1"
-            style={subtitleStyle}
+      <section sx={sectionStyles}>
+        <Box sx={sectionStyles}>
+          <Hero />
+          <Categories />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              marginTop: "20px",
+            }}
           >
-            PRODUCTS
-          </Typography>
-          <Typography
-            variant="h4"
-            style={headerStyle}
-            className="font-medium title-font"
-          >
-            MOST POPULAR PRODUCTS
-          </Typography>
+            <Typography
+              variant="subtitle2"
+              className="tracking-widest font-medium title-font mb-1"
+              style={subtitleStyle}
+            >
+              PRODUCTS
+            </Typography>
+            <Typography
+              variant="h4"
+              style={headerStyle}
+              className="font-medium title-font"
+            >
+              MOST POPULAR PRODUCTS
+            </Typography>
+          </Box>
+          {loading ? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "50vh",
+              }}
+            >
+              <CircularProgress sx={elementStyles} />
+            </Box>
+          ) : products.length > 0 ? (
+            <ProductsCard products={products} />
+          ) : (
+            <Box>
+              <Typography
+                variant="h6"
+                style={headerStyle}
+                className="font-semibold"
+              >
+                No products available
+              </Typography>
+            </Box>
+          )}
+          <StatCard />
         </Box>
-        {products.length > 0 ? (
-          <ProductsCard products={products} />
-        ) : (
-          <div>Loading...</div>
-        )}
-        <StatCard />
-      </Box>
+      </section>
     </>
   );
 };

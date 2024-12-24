@@ -29,6 +29,7 @@ export const colorTokens = {
   accent: {
     50: "#FF6F61", // A coral tone for accent
     100: "#F4B400", // Yellowish accent for promotions or buttons
+    200: "#FF0000",// red for errors
   },
 };
 
@@ -43,6 +44,7 @@ export const themeSettings = (mode) => {
               dark: colorTokens.primary[900], // lighter blue accent
               main: colorTokens.primary[900], // aqua color for dark mode buttons
               light: colorTokens.primary[800], // darker shade for dark mode
+              error: colorTokens.accent[200], 
             },
             neutral: {
               dark: colorTokens.grey[100],
@@ -61,6 +63,7 @@ export const themeSettings = (mode) => {
               dark: colorTokens.primary[700],
               main: colorTokens.primary[900],
               light: colorTokens.primary[900],
+              error: colorTokens.accent[200],
             },
             neutral: {
               dark: colorTokens.grey[700],

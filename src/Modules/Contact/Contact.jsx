@@ -1,234 +1,249 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import emailjs from "@emailjs/browser";
+import { useLocation } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useTheme } from "@mui/material/styles";
+import { useSelector } from "react-redux";
+import { Box, Typography } from "@mui/material";
+import "./Contact.css";
+
+// Validation Schema
+const validationSchema = yup.object().shape({
+  name: yup
+    .string()
+    .required("Name is required")
+    .matches(/^[a-zA-Z\s]+$/, "Only letters and spaces are allowed"),
+  email: yup.string().email("Invalid email").required("Email is required"),
+  message: yup.string().required("Message is required"),
+});
 
 const Contact = () => {
-  const [fields, setFields] = useState({});
-  const [errors, setErrors] = useState({});
-
-  const handleValidation = () => {
-    const formFields = { ...fields };
-    const formErrors = {};
-    let formIsValid = true;
-
-    //Name
-    if (!formFields["name"]) {
-      formIsValid = false;
-      formErrors["name"] = "Cannot be empty";
-    }
-
-    if (typeof formFields["name"] !== "undefined") {
-      if (!formFields["name"].match(/^[a-zA-Z]+$/)) {
-        formIsValid = false;
-        formErrors["name"] = "Only letters";
-      }
-    }
-
-    //Email
-    if (!formFields["email"]) {
-      formIsValid = false;
-      formErrors["email"] = "Cannot be empty";
-    }
-
-    if (typeof formFields["email"] !== "undefined") {
-      let lastAtPos = formFields["email"].lastIndexOf("@");
-      let lastDotPos = formFields["email"].lastIndexOf(".");
-
-      if (
-        !(
-          lastAtPos < lastDotPos &&
-          lastAtPos > 0 &&
-          formFields["email"].indexOf("@@") === -1 &&
-          lastDotPos > 2 &&
-          fields["email"].length - lastDotPos > 2
-        )
-      ) {
-        formIsValid = false;
-        formFields["email"] = "Email is not valid";
-      }
-    }
-    setErrors(formErrors);
-    return formIsValid;
-  };
-
-  const handleChange = (field, value) => {
-    setFields({
-      ...fields,
-      [field]: value,
-    });
-  };
+  const theme = useTheme();
+  const mode = useSelector((state) => state.theme.mode);
+  const location = useLocation();
 
   const form = useRef();
-  const cancelCourse = () => {
-    document.getElementById("cancel").reset();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
+  const sendEmail = (data) => {
+    emailjs
+      .sendForm(
+        "service_0lyx3oi",
+        "template_iru4ntl",
+        form.current,
+        "gkYdm29_4vOpv2k6p"
+      )
+      .then(
+        (result) => {
+          console.log(result.text);
+          reset(); // Reset the form after successful submission
+          alert("Email Sent");
+        },
+        (error) => {
+          console.error(error.text);
+        }
+      );
   };
 
-  const sendEmail = (e) => {
-    e.preventDefault();
-    if (handleValidation()) {
-      emailjs
-        .sendForm(
-          "service_0lyx3oi",
-          "template_iru4ntl",
-          form.current,
-          "gkYdm29_4vOpv2k6p"
-        )
-        .then(
-          (result) => {
-            console.log(result.text);
-            cancelCourse();
-            alert("Email Sent");
-          },
-          (error) => {
-            console.log(error.text);
-          }
-        );
-    } else {
-      alert("Form has errors.");
-    }
+  const formFields = [
+    {
+      id: "name",
+      label: "Name",
+      type: "text",
+      placeholder: "John Doe",
+      validation: { required: "Name is required" },
+    },
+    {
+      id: "email",
+      label: "Email",
+      type: "email",
+      placeholder: "example@gmail.com",
+      validation: { required: "Email is required" },
+    },
+    {
+      id: "message",
+      label: "Message",
+      type: "textarea",
+      placeholder: "",
+      validation: { required: "Message is required" },
+    },
+  ];
+
+  const sectionStyles = {
+    backgroundColor:
+      mode === "dark"
+        ? theme.palette.primary.main
+        : theme.palette.background.default,
+    color:
+      mode === "dark" ? theme.palette.grey[10] : theme.palette.primary[900],
+    padding: "1rem 2rem",
   };
+
+  const subtitleStyle = {
+    color:
+      mode === "dark"
+        ? theme.palette.neutral.light
+        : theme.palette.primary.light,
+  };
+
+  const paragraphStyles = {
+    color:
+      mode === "dark"
+        ? theme.palette.neutral.light
+        : theme.palette.primary.light,
+  };
+
+  const errorStyles = {
+    color:
+      mode === "dark"
+        ? theme.palette.primary.error
+        : theme.palette.primary.error,
+  };
+
+  const labelStyle = {
+    color:
+      mode === "dark"
+        ? theme.palette.neutral.light
+        : theme.palette.primary.light,
+  };
+
+  const formStyles = {
+    inputStyles: {
+      backgroundColor:
+        mode === "dark"
+          ? theme.palette.primary.main
+          : theme.palette.neutral.light,
+      color:
+        mode === "dark"
+          ? theme.palette.neutral.light
+          : theme.palette.primary.light,
+      borderColor:
+        mode === "dark"
+          ? theme.palette.neutral.light
+          : theme.palette.primary.light,
+    },
+    focusStyles: {
+      borderColor:
+        mode === "dark"
+          ? theme.palette.neutral.light
+          : theme.palette.primary.light,
+      ringColor:
+        mode === "dark"
+          ? theme.palette.neutral.light
+          : theme.palette.primary.light,
+    },
+  };
+
+  const submitButtonStyle = {
+    backgroundColor:
+      mode === "dark"
+        ? theme.palette.neutral.light
+        : theme.palette.primary.main,
+    color:
+      mode === "dark"
+        ? theme.palette.primary.main
+        : theme.palette.neutral.light,
+    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
 
   return (
-    <section className="text-gray-600 body-font relative">
-      <div className="container px-5 py-24 mx-auto">
-        <div className="flex flex-col text-center w-full mb-12">
-          <h1 className="title-font font-medium text-3xl mb-2 text-gray-900 font-weight: 800">
-            CONTACT US
-          </h1>
-          <p className="lg:w-2/3 mx-auto leading-relaxed text-[#3559E0]">
-            Contact us for any help or support.
-          </p>
-        </div>
-        <div className="lg:w-1/2 md:w-2/3 mx-auto">
-          <div className="-m-2">
-            <form
-              className="contactForm"
-              ref={form}
-              onSubmit={sendEmail}
-              id="cancel"
-            >
-              <div className="p-2 w-full">
-                <div className="relative">
-                  <label for="name" className="leading-7 text-xl text-[#0F2167]">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="your_name"
-                    onChange={(e) => handleChange("name", e.target.value)}
-                    value={fields["name"]}
-                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                    placeholder="John Doe"
-                  />
-                  <span className="error">{errors["name"]}</span>
-                </div>
-              </div>
-              <div className="p-2 w-full">
-                <div className="relative">
-                  <label
-                    for="email"
-                    className="leading-7 text-xl text-[#0F2167]"
-                  >
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="your_email"
-                    onChange={(e) => handleChange("email", e.target.value)}
-                    value={fields["email"]}
-                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                    placeholder="example@gmail.com"
-                  />
-                  <span className="error">{errors["email"]}</span>
-                </div>
-              </div>
-              <div className="p-2 w-full">
-                <div className="relative">
-                  <label
-                    for="message"
-                    className="leading-7 text-xl text-[#0F2167]"
-                  >
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    className="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
-                  ></textarea>
-                </div>
-              </div>
-              <div className="p-2 w-full">
+    <section style={sectionStyles}>
+      {/* Contact Us Header */}
+      <Box sx={{ textAlign: "center", marginBottom: "2rem" }}>
+        <Typography
+          variant="h2"
+          style={subtitleStyle}
+          className="capitalize py-5"
+        >
+          CONTACT US
+        </Typography>
+        <p style={paragraphStyles}>Contact us for any help or support.</p>
+      </Box>
+
+      {/* Form Section */}
+      <Box className="container px-5 py-2 mx-auto">
+        <Box className="lg:w-1/2 md:w-2/3 mx-auto">
+          <Box className="-m-2">
+            <form className="contactForm" onSubmit={handleSubmit(sendEmail)}>
+              {formFields.map((field) => (
+                <Box key={field.id} className="p-2 w-full">
+                  <Box className="relative">
+                    <label
+                      style={labelStyle}
+                      htmlFor={field.id}
+                      className="leading-7 text-base"
+                    >
+                      {field.label}
+                    </label>
+                    {field.type === "textarea" ? (
+                      <textarea
+                        id={field.id}
+                        {...register(field.id, field.validation)}
+                        className="w-full rounded border focus:ring-2 h-32 text-base outline-none py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
+                        style={{
+                          backgroundColor:
+                            formStyles.inputStyles.backgroundColor,
+                          color: formStyles.inputStyles.color,
+                          borderColor: formStyles.inputStyles.borderColor,
+                          focus: {
+                            borderColor: formStyles.focusStyles.borderColor,
+                            boxShadow: `0 0 0 2px ${formStyles.focusStyles.ringColor}`,
+                          },
+                        }}
+                      ></textarea>
+                    ) : (
+                      <input
+                        type={field.type}
+                        id={field.id}
+                        {...register(field.id, field.validation)}
+                        className="w-full rounded border focus:ring-2 text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                        placeholder={field.placeholder}
+                        style={{
+                          backgroundColor:
+                            formStyles.inputStyles.backgroundColor,
+                          color: formStyles.inputStyles.color,
+                          borderColor: formStyles.inputStyles.borderColor,
+                          focus: {
+                            borderColor: formStyles.focusStyles.borderColor,
+                            boxShadow: `0 0 0 2px ${formStyles.focusStyles.ringColor}`,
+                          },
+                        }}
+                      />
+                    )}
+                    {errors[field.id] && (
+                      <span style={errorStyles} className="error">
+                        {errors[field.id].message}
+                      </span>
+                    )}
+                  </Box>
+                </Box>
+              ))}
+              <Box className="p-2 w-full">
                 <button
-                  className="flex mx-auto text-white bg-[#0F2167] py-2 px-8 focus:outline-none rounded text-lg"
-                  onClick={(e) => sendEmail(e)}
+                  style={submitButtonStyle}
+                  className="flex mx-auto py-2 px-3 focus:outline-none rounded text-base"
                 >
                   SEND MESSAGE
                 </button>
-              </div>
+              </Box>
             </form>
-          </div>
-          <div className="p-2 w-full pt-8 mt-8 border-t border-gray-200 text-center">
-            <p className="leading-normal my-5">
-              49 Smith St.
-              <br />
-              Saint Cloud, MN 56301
-            </p>
-            <span className="inline-flex">
-              <a className="text-gray-500">
-                <svg
-                  fill="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  className="w-5 h-5"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
-                </svg>
-              </a>
-              <a className="ml-4 text-gray-500">
-                <svg
-                  fill="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  className="w-5 h-5"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
-                </svg>
-              </a>
-              <a className="ml-4 text-gray-500">
-                <svg
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  className="w-5 h-5"
-                  viewBox="0 0 24 24"
-                >
-                  <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-                  <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"></path>
-                </svg>
-              </a>
-              <a className="ml-4 text-gray-500">
-                <svg
-                  fill="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  className="w-5 h-5"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
-                </svg>
-              </a>
-            </span>
-          </div>
-        </div>
-      </div>
+          </Box>
+        </Box>
+      </Box>
     </section>
   );
 };

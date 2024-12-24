@@ -76,7 +76,7 @@ const StatCard = () => {
     <section style={sectionStyles}>
       <Box textAlign="center" marginBottom="2rem">
         <Typography variant="h4" component="h1" style={headerStyle}>
-          E-Commerce Performance Overview
+          Our Performance Overview
         </Typography>
         <Typography
           variant="body1"
@@ -96,7 +96,8 @@ const StatCard = () => {
           <Box
             key={index}
             style={{
-              width: "300px",
+              width: "100%",
+              maxWidth: "300px",
               margin: "0 auto",
             }}
           >

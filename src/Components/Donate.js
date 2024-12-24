@@ -1,83 +1,362 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { PaystackButton } from "react-paystack";
+import {
+  Box,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { useForm, Controller } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+// Validation schema with Yup
+const validationSchema = yup.object().shape({
+  name: yup
+    .string()
+    .required("Name is required")
+    .matches(/^[a-zA-Z\s]+$/, "Only letters and spaces are allowed"),
+  email: yup.string().email("Invalid email").required("Email is required"),
+  phone: yup
+    .string()
+    .required("Phone number is required")
+    .matches(/^\d{11}$/, "Phone number must be 11 digits"),
+});
 
 const Donate = () => {
+  const [openModal, setOpenModal] = useState(false);
+
+  const theme = useTheme();
+  const mode = useSelector((state) => state.theme.mode);
+  const location = useLocation();
+  const finalPrice = location.state?.finalPrice || "0.00";
+
   const publicKey = "pk_test_5c6ac8558f4aa956116ce262e3c396b4de098a39";
-  const [email, setEmail] = useState("");
-  const [amount, setAmount] = useState("");
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [amount, setAmount] = useState(
+    finalPrice !== "0.00" ? finalPrice : finalPrice
+  );
+
   const navigate = useNavigate();
 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
+  const onSubmit = (data) => {
+    // Populate Paystack props with validated data
+    componentProps.email = data.email;
+    componentProps.metadata.name = data.name;
+    componentProps.metadata.phone = data.phone;
+
+    console.log("Populated componentProps:", componentProps);
+  };
+
   const componentProps = {
-    email,
+    email: "",
     amount: amount * 100,
     metadata: {
-      name,
-      phone,
+      name: "",
+      phone: "",
     },
     publicKey,
     text: "Pay Now",
     onSuccess: () => {
-      alert(
-        "Payment successful!, kindly continue shopping as your order is being processed!."
+      toast.success(
+        "Payment successful! Kindly continue shopping as your order is being processed!"
       );
       navigate("/");
     },
     onClose: () => {
-      alert("Are you sure you want to cancel payment?");
-      navigate("/cart");
+      setOpenModal(true);
     },
   };
 
-  const style = {
-    input:
-      "block w-full px-4 py-2 mb-4 rounded-md border border-gray-300 focus:outline-none focus:border-primary-500",
-    button: "block w-full px-4 py-2 bg-[#1369A1] text-white rounded-md",
+  const handleClosePayment = () => {
+    setOpenModal(false);
+    navigate("/cart");
+  };
+
+  const handleCancel = () => {
+    setOpenModal(false);
+  };
+
+  const sectionStyles = {
+    backgroundColor:
+      mode === "dark"
+        ? theme.palette.primary.main
+        : theme.palette.background.default,
+    padding: "5rem 2rem",
+  };
+
+  const headerStyle = {
+    color:
+      mode === "dark"
+        ? theme.palette.neutral.light
+        : theme.palette.primary.light,
+  };
+
+  const errorStyles = {
+    color:
+      mode === "dark"
+        ? theme.palette.neutral.light
+        : theme.palette.primary.error,
+  };
+
+  const modalButtonStyles = {
+    noButtonStyles: {
+      backgroundColor: theme.palette.primary.error,
+      color: theme.palette.neutral.light,
+    },
+    yesButtonStyles: {
+      backgroundColor:
+        mode === "dark"
+          ? theme.palette.neutral.light
+          : theme.palette.primary.light,
+      color:
+        mode === "dark"
+          ? theme.palette.primary.main
+          : theme.palette.neutral.light,
+    },
+  };
+
+  const formStyles = {
+    inputStyles: {
+      backgroundColor:
+        mode === "dark"
+          ? theme.palette.primary.main
+          : theme.palette.neutral.light,
+      color:
+        mode === "dark"
+          ? theme.palette.neutral.light
+          : theme.palette.primary.light,
+      borderColor:
+        mode === "dark"
+          ? theme.palette.neutral.light
+          : theme.palette.primary.light,
+    },
+    focusStyles: {
+      borderColor:
+        mode === "dark"
+          ? theme.palette.neutral.light
+          : theme.palette.primary.light,
+      ringColor:
+        mode === "dark"
+          ? theme.palette.neutral.light
+          : theme.palette.primary.light,
+    },
+    prefixColor: {
+      color:
+        mode === "dark"
+          ? theme.palette.primary.main
+          : theme.palette.primary.main,
+    },
+  };
+
+  const paragraphStyles = {
+    color:
+      mode === "dark"
+        ? theme.palette.neutral.light
+        : theme.palette.primary.light,
+  };
+
+  const inputProps = {
+    type: "number",
+    placeholder: "Amount",
+    value: amount,
+    onChange: (e) => setAmount(e.target.value),
+    readOnly: finalPrice !== "0.00",
+    prefix: finalPrice !== "0.00" ? "$" : "",
   };
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+  }, [location]);
 
   return (
-    <div className="px-4">
-      <h1 className="text-center text-[25px] my-4 font-[600]">
+    <Box className="px-4 h-[100vh]" style={sectionStyles}>
+      <Typography
+        variant="h4"
+        sx={{
+          ...headerStyle,
+          fontFamily: "Gilmer, sans-serif",
+          fontSize: { xs: "1.5rem", sm: "1.75rem", md: "2rem" },
+          fontWeight: 600,
+          textAlign: "center",
+          marginY: 4,
+        }}
+        className="font-semibold"
+      >
         Make your payment here
-      </h1>
-      <div className="max-w-md mx-auto my-4">
-        <input
-          type="email"
-          placeholder="Email"
-          className={style.input}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="number"
-          placeholder="Amount"
-          className={style.input}
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Name"
-          className={style.input}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          type="number"
-          placeholder="Phone number"
-          className={style.input}
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-        />
-        <PaystackButton className={style.button} {...componentProps} />
-      </div>
-    </div>
+      </Typography>
+      <form
+        onSubmit={handleSubmit((data) => {
+          onSubmit(data);
+          console.log("Triggering Paystack Button Click"); // Log button click event
+          document.querySelector(".paystack-button").click();
+        })}
+        className="max-w-md mx-auto my-4"
+      >
+        {/* Name Field */}
+        <Box className="relative w-full mb-4">
+          <Controller
+            name="name"
+            control={control}
+            render={({ field }) => (
+              <input
+                {...field}
+                placeholder="Name"
+                className="w-full py-2 px-3 rounded"
+              />
+            )}
+          />
+          {errors.name && (
+            <Typography
+              variant="caption"
+              sx={{ ...errorStyles, marginTop: "0.25rem" }}
+            >
+              {errors.name.message}
+            </Typography>
+          )}
+        </Box>
+
+        {/* Email Field */}
+        <Box className="relative w-full mb-4">
+          <Controller
+            name="email"
+            control={control}
+            render={({ field }) => (
+              <input
+                {...field}
+                placeholder="Email"
+                className="w-full py-2 px-3 rounded"
+              />
+            )}
+          />
+          {errors.email && (
+            <Typography
+              variant="caption"
+              sx={{ ...errorStyles, marginTop: "0.25rem" }}
+            >
+              {errors.email.message}
+            </Typography>
+          )}
+        </Box>
+
+        {/* Phone Field */}
+        <Box className="relative w-full mb-4">
+          <Controller
+            name="phone"
+            control={control}
+            render={({ field }) => (
+              <input
+                {...field}
+                placeholder="Phone"
+                className="w-full py-2 px-3 rounded"
+              />
+            )}
+          />
+          {errors.phone && (
+            <Typography
+              variant="caption"
+              sx={{ ...errorStyles, marginTop: "0.25rem" }}
+            >
+              {errors.phone.message}
+            </Typography>
+          )}
+        </Box>
+
+        {/* Amount Field */}
+        <Box className="relative w-full mb-4">
+          <Controller
+            name="amount"
+            control={control}
+            render={({ field }) => (
+              <div className="flex items-center w-full">
+                {/* Input field */}
+                <input
+                  type={inputProps.type}
+                  placeholder={inputProps.placeholder}
+                  value={inputProps.value}
+                  onChange={inputProps.onChange}
+                  onBlur={inputProps.onBlur}
+                  name={inputProps.name}
+                  readOnly={inputProps.readOnly || false}
+                  className={`w-full py-2 pl-8 pr-3 rounded`}
+                  style={{
+                    color: formStyles.prefixColor.color,
+                    borderColor: formStyles.inputStyles.borderColor,
+                    paddingLeft: inputProps.prefix ? "2rem" : "0.75rem",
+                    transition: "all 0.3s ease-in-out",
+                    ":focus": {
+                      borderColor: formStyles.focusStyles.borderColor,
+                      boxShadow: `0 0 0 2px ${formStyles.focusStyles.ringColor}`,
+                    },
+                  }}
+                />
+                {/* Prefix inside the input */}
+                {inputProps.prefix && (
+                  <span
+                    style={formStyles.prefixColor}
+                    className="absolute left-3 text-sm"
+                  >
+                    {inputProps.prefix}
+                  </span>
+                )}
+              </div>
+            )}
+          />
+        </Box>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          className={`font-semibold mt-2 w-full rounded border py-1 px-3 leading-8 text-base duration-200 ease-in-out ${
+            mode === "dark"
+              ? "bg-[#ffffff] text-[#0F2167]"
+              : "bg-[#0F2167] text-[#ffffff]"
+          } shadow-[0px_4px_6px_rgba(0,0,0,0.1)]`}
+        >
+          Pay Now
+        </button>
+      </form>
+
+      {/* Hidden Paystack Button */}
+      <PaystackButton {...componentProps} className="paystack-button hidden" />
+
+      {/* Modal to confirm the close action */}
+      <Dialog open={openModal} onClose={handleCancel}>
+        <DialogTitle>Cancel Payment</DialogTitle>
+        <DialogContent>
+          Are you sure you want to cancel the payment? If you cancel, your cart
+          will be saved, and you can continue shopping.
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleCancel}
+            style={modalButtonStyles.noButtonStyles}
+          >
+            No
+          </Button>
+          <Button
+            onClick={handleClosePayment}
+            style={modalButtonStyles.yesButtonStyles}
+          >
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 };
 
