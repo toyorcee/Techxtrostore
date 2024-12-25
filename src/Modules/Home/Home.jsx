@@ -69,7 +69,7 @@ const Home = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [location, products.length]);
+  }, [location]);
 
   return (
     <>

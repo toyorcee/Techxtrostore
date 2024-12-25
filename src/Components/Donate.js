@@ -47,37 +47,46 @@ const Donate = () => {
 
   const {
     control,
+    watch,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
 
+  // Watch form values in real-time
+  const formValues = watch();
+
   const onSubmit = (data) => {
     // Populate Paystack props with validated data
-    componentProps.email = data.email;
-    componentProps.metadata.name = data.name;
-    componentProps.metadata.phone = data.phone;
+    componentProps.email = data.email.trim(); // Ensure no leading/trailing spaces
+    componentProps.metadata.name = data.name.trim();
+    componentProps.metadata.phone = data.phone.trim();
 
-    console.log("Populated componentProps:", componentProps);
+    if (!componentProps.email) {
+      toast.error("Email is required for payment!");
+      return;
+    }
   };
 
+  // Dynamically update componentProps
   const componentProps = {
-    email: "",
+    email: formValues.email || "", // Watch email field
     amount: amount * 100,
     metadata: {
-      name: "",
-      phone: "",
+      name: formValues.name || "", // Watch name field
+      phone: formValues.phone || "", // Watch phone field
     },
     publicKey,
     text: "Pay Now",
-    onSuccess: () => {
+    onSuccess: (reference) => {
       toast.success(
         "Payment successful! Kindly continue shopping as your order is being processed!"
       );
       navigate("/");
     },
     onClose: () => {
+      console.warn("Payment Modal Closed by User");
       setOpenModal(true);
     },
   };
@@ -202,7 +211,6 @@ const Donate = () => {
       <form
         onSubmit={handleSubmit((data) => {
           onSubmit(data);
-          console.log("Triggering Paystack Button Click"); // Log button click event
           document.querySelector(".paystack-button").click();
         })}
         className="max-w-md mx-auto my-4"

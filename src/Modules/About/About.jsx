@@ -3,6 +3,7 @@ import { useTheme } from "@mui/material/styles";
 import { useSelector } from "react-redux";
 import aboutimg from "../../Assets/ecommerce-10.webp";
 import { Box, Typography } from "@mui/material";
+import { motion } from "framer-motion";
 import "./About.css";
 
 const About = () => {
@@ -51,14 +52,23 @@ const About = () => {
     <section style={sectionStyles}>
       {/* About Us Header */}
       <Box sx={{ textAlign: "center", marginBottom: "2rem" }}>
-        <Typography variant="h2" style={subtitleStyle} className="capitalize py-5">
+        <Typography
+          variant="h2"
+          style={subtitleStyle}
+          className="capitalize py-5"
+        >
           ABOUT US
         </Typography>
       </Box>
 
       {/* Content */}
       <Box className="container px-5 py-2 mx-auto items-center justify-center grid grid-cols-1 lg:flex gap-4">
-        <Box className="flex flex-wrap mt-auto mb-auto lg:w-1/2 w-full">
+        <motion.Box
+          className="flex flex-wrap mt-auto mb-auto lg:w-1/2 w-full"
+          initial={{ x: -100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 1 }}
+        >
           <Box className="w-full sm:p-4 px-4 mb-6 text-center items-center justify-center">
             <Box sx={paragraphStyles} className="leading-relaxed">
               <p>
@@ -96,14 +106,19 @@ const About = () => {
               </Box>
             ))}
           </Box>
-        </Box>
-        <Box className="lg:w-1/2 w-full rounded-lg overflow-hidden mt-6 sm:mt-0">
+        </motion.Box>
+        <motion.Box
+          className="lg:w-1/2 w-full rounded-lg overflow-hidden mt-6 sm:mt-0"
+          initial={{ x: 100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 1 }}
+        >
           <img
             className="object-cover object-center w-full h-full"
             src={aboutimg}
             alt="stats"
           />
-        </Box>
+        </motion.Box>
       </Box>
     </section>
   );

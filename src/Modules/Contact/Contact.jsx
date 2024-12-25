@@ -7,6 +7,7 @@ import * as yup from "yup";
 import { useTheme } from "@mui/material/styles";
 import { useSelector } from "react-redux";
 import { Box, Typography } from "@mui/material";
+import { motion } from "framer-motion";
 import "./Contact.css";
 
 // Validation Schema
@@ -175,7 +176,12 @@ const Contact = () => {
       </Box>
 
       {/* Form Section */}
-      <Box className="container px-5 py-2 mx-auto">
+      <motion.Box
+        className="container px-5 py-1 mx-auto"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
         <Box className="lg:w-1/2 md:w-2/3 mx-auto">
           <Box className="-m-2">
             <form className="contactForm" onSubmit={handleSubmit(sendEmail)}>
@@ -243,7 +249,7 @@ const Contact = () => {
             </form>
           </Box>
         </Box>
-      </Box>
+      </motion.Box>
     </section>
   );
 };
