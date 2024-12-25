@@ -52,15 +52,10 @@ const FeatureCard = ({ cards = [1, 2, 3] }) => {
     alignItems: "center",
     justifyContent: "center",
     borderRadius: "50%",
-    backgroundColor:
-      mode === "dark" ? theme.palette.primary.main : theme.palette.neutral.main,
-    color:
-      mode === "dark"
-        ? theme.palette.background.default
-        : theme.palette.primary.light,
+    backgroundColor: mode === "dark" ? "#0F2167" : "#F6F6F6",
+    color: mode === "dark" ? "#F6F6F6" : "#0F2167",
     padding: "4px",
   };
-
   const cardTextStyles = {
     color:
       mode === "dark"
@@ -126,7 +121,12 @@ const FeatureCard = ({ cards = [1, 2, 3] }) => {
               <motion.div
                 initial={{
                   opacity: 0,
-                  x: index === 1 || index === 0 ? -5 : 5,
+                  x:
+                    window.innerWidth <= 768
+                      ? -100
+                      : index === 1 || index === 0
+                      ? -5
+                      : 5, 
                 }}
                 animate={isInView ? { opacity: 1, x: 0 } : {}}
                 transition={{
