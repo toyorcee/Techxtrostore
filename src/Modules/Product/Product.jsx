@@ -1,16 +1,19 @@
+import axios from "axios";
+import { toast } from "react-toastify";
 import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { useSelector } from "react-redux";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { useSelector, useDispatch } from "react-redux";
+import { clearProduct, setProduct } from "../../state/productSlice.js";
 import "./Product.css";
 
 const Product = () => {
   const { id } = useParams();
-  const [product, setProduct] = useState({});
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const product = useSelector((state) => state.product.product);
+  console.log("product ", product);
+  const [loading, setLoading] = useState(false);
 
   const buttonRef = useRef(null);
   const theme = useTheme();
@@ -190,34 +193,57 @@ const Product = () => {
   };
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const response = await axios.get(
-          `https://fakestoreapi.com/products/${id}`
-        );
-        setProduct(response.data);
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        toast.error(
-          "Failed to fetch product!, Check your network connection and refresh."
-        );
+    if (!product || product.id !== Number(id)) {
+      // Fetch only if product doesn't exist or if id has changed
+      const fetchProduct = async () => {
+        setLoading(true); // Start loading
+        try {
+          console.log("Fetching Product with ID: ", id);
+          const response = await axios.get(
+            `https://fakestoreapi.com/products/${id}`
+          );
+          console.log("Fetched Product: ", response.data);
+          dispatch(setProduct(response.data)); // Cache product in Redux
+          setLoading(false); // Stop loading
+        } catch (error) {
+          setLoading(false);
+          toast.error(
+            "Failed to fetch product! Check your network connection and refresh."
+          );
+        }
+      };
+
+      fetchProduct();
+    } else {
+      // If the product exists and the ID is the same, avoid fetching and set loading to false
+      setLoading(false);
+    }
+    return () => {
+      // Only clear product state if the id has changed
+      if (product.id !== Number(id)) {
+        console.log("Clearing Product State");
+        dispatch(clearProduct());
       }
     };
-    fetchProduct();
   }, [id]);
 
   useEffect(() => {
+    if (!buttonRef.current) return; // Guard clause to ensure the ref exists
+
     const interval = setInterval(() => {
       if (buttonRef.current) {
+        // Double-check the ref exists before applying styles
         buttonRef.current.style.animation = "shake 0.5s ease-in-out";
         setTimeout(() => {
-          buttonRef.current.style.animation = "";
+          if (buttonRef.current) {
+            // Ensure the ref exists before resetting animation
+            buttonRef.current.style.animation = "";
+          }
         }, 500);
       }
     }, 3000); // Trigger every 3 seconds
 
-    return () => clearInterval(interval); //
+    return () => clearInterval(interval); // Clean up on component unmount
   }, []);
 
   useEffect(() => {
@@ -256,180 +282,176 @@ const Product = () => {
 
   return (
     <section style={sectionStyles}>
-      {loading ? (
+      {loading ? ( // Show loader when fetching
         <Box
           sx={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            minHeight: "50vh",
           }}
         >
           <CircularProgress sx={elementStyles} />
         </Box>
-      ) : (
-        <>
-          {!Object.keys(product).length > 0 ? (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "50vh",
-              }}
-            >
+      ) : product && Object.keys(product).length > 0 ? ( // Check if product exists
+        <Box className="container-fluid px-5 py-24 mx-auto">
+          <Box className="lg:w-4/5 mx-auto flex flex-wrap">
+            <img
+              alt={product?.title}
+              className="lg:w-1/2 w-full lg:h-auto max-h-[500px] h-64 object-contain object-center rounded"
+              src={product?.image}
+              sx={cardMediaStyles}
+            />
+            <Box className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
               <Typography
-                variant="h6"
-                style={headerStyle}
-                className="font-semibold"
+                variant="h4"
+                sx={{
+                  ...headerStyle,
+                  textTransform: "Uppercase",
+                }}
+                className="font-medium title-font"
               >
-                No products available
+                {product?.category}
               </Typography>
-            </Box>
-          ) : (
-            <>
-              <Box className="container-fluid px-5 py-24 mx-auto">
-                <Box className="lg:w-4/5 mx-auto flex flex-wrap">
-                  <img
-                    alt={product?.title}
-                    className="lg:w-1/2 w-full lg:h-auto max-h-[500px] h-64 object-contain object-center rounded"
-                    src={product?.image}
-                    sx={cardMediaStyles}
-                  />
-                  <Box className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
-                    <Typography
-                      variant="h4"
-                      sx={{
-                        ...headerStyle,
-                        textTransform: "Uppercase",
-                      }}
-                      className="font-medium title-font"
-                    >
-                      {product?.category}
-                    </Typography>
-                    <Typography
-                      variant="h2"
-                      sx={{
-                        ...headerStyle,
-                        textTransform: "Uppercase",
-                      }}
-                    >
-                      {product?.title}
-                    </Typography>
-                    <Box className="flex mb-4 gap-2">
-                      <Box className="flex items-center gap-2">
-                        {stars.map((icon, index) => (
-                          <Box key={index}>{icon}</Box>
-                        ))}
-                        <Typography style={reviewStyle}>4 Reviews</Typography>
-                      </Box>
-                      <Box className="flex ml-3 pl-3 py-2 border-l-2 border-gray-200 space-x-2">
-                        {socialIcons.map((icon, index) => (
-                          <a href="#" style={reviewStyle} key={index}>
-                            {icon}
-                          </a>
-                        ))}
-                      </Box>
-                    </Box>
-                    <p style={paragraphStyles}>{product?.description}</p>
-                    <Box className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
-                      <Box className="flex gap-2">
-                        <span
-                          style={{ ...paragraphStyles }}
-                          className="font-semibold"
-                        >
-                          Color
-                        </span>
-                        <button className="border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none"></button>
-                        <button className="border-2 border-gray-300 ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none"></button>
-                        <button className="border-2 border-gray-300 ml-1 bg-indigo-500 rounded-full w-6 h-6 focus:outline-none"></button>
-                      </Box>
-                      <Box className="flex ml-6 items-center gap-2">
-                        <span
-                          style={{ ...paragraphStyles }}
-                          className="font-semibold"
-                        >
-                          Style
-                        </span>
-                        <div className="relative">
-                          <select className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base pl-3 pr-10">
-                            <option>SM</option>
-                            <option>M</option>
-                            <option>L</option>
-                            <option>XL</option>
-                          </select>
-                          <span className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
-                            <svg
-                              fill="none"
-                              stroke="currentColor"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              className="w-4 h-4"
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="M6 9l6 6 6-6"></path>
-                            </svg>
-                          </span>
-                        </div>
-                      </Box>
-                    </Box>
-                    <Box className="flex justify-between items-center" id="fdc">
-                      <Box className="flex" id="top">
-                        <span
-                          style={reviewStyle}
-                          className="title-font font-medium text-2xl text-gray-900"
-                        >
-                          ${product?.price}
-                        </span>
-                        <button
-                          style={colorButton}
-                          className="rounded-full w-10 h-10 p-0 border-0 inline-flex items-center justify-center ml-4"
-                        >
-                          <svg
-                            fill={
-                              mode === "dark"
-                                ? theme.palette.primary.main
-                                : theme.palette.neutral.light
-                            }
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            className="w-5 h-5"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
-                          </svg>
-                        </button>
-                      </Box>
-                      <Box className="flex justify-content-between" id="btns">
-                        <button
-                          ref={buttonRef}
-                          style={{
-                            ...buynowButton,
-                            animation: buttonRef.current
-                              ? "shake 0.5s ease-in-out 3s infinite"
-                              : "",
-                          }}
-                          className="flex ml-auto border-0 py-2 px-6 focus:outline-none rounded-full mr-2 font-semibold"
-                          onClick={() => handleCart(product, true)}
-                        >
-                          BUY NOW
-                        </button>
-                        <button
-                          style={addtocartButton}
-                          className="flex ml-auto border-0 py-2 px-6 focus:outline-none rounded-full font-semibold"
-                          onClick={() => handleCart(product)}
-                        >
-                          ADD TO CART
-                        </button>
-                      </Box>
-                    </Box>
-                  </Box>
+              <Typography
+                variant="h2"
+                sx={{
+                  ...headerStyle,
+                  textTransform: "Uppercase",
+                }}
+              >
+                {product?.title}
+              </Typography>
+              <Box className="flex mb-4 gap-2">
+                <Box className="flex items-center gap-2">
+                  {stars.map((icon, index) => (
+                    <Box key={index}>{icon}</Box>
+                  ))}
+                  <Typography style={reviewStyle}>4 Reviews</Typography>
+                </Box>
+                <Box className="flex ml-3 pl-3 py-2 border-l-2 border-gray-200 space-x-2">
+                  {socialIcons.map((icon, index) => (
+                    <a href="#" style={reviewStyle} key={index}>
+                      {icon}
+                    </a>
+                  ))}
                 </Box>
               </Box>
-            </>
-          )}
-        </>
+              <p style={paragraphStyles}>{product?.description}</p>
+              <Box className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
+                <Box className="flex gap-2">
+                  <span
+                    style={{ ...paragraphStyles }}
+                    className="font-semibold"
+                  >
+                    Color
+                  </span>
+                  <button className="border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none"></button>
+                  <button className="border-2 border-gray-300 ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none"></button>
+                  <button className="border-2 border-gray-300 ml-1 bg-indigo-500 rounded-full w-6 h-6 focus:outline-none"></button>
+                </Box>
+                <Box className="flex ml-6 items-center gap-2">
+                  <span
+                    style={{ ...paragraphStyles }}
+                    className="font-semibold"
+                  >
+                    Style
+                  </span>
+                  <div className="relative">
+                    <select className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 text-base pl-3 pr-10">
+                      <option>SM</option>
+                      <option>M</option>
+                      <option>L</option>
+                      <option>XL</option>
+                    </select>
+                    <span className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
+                      <svg
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        className="w-4 h-4"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M6 9l6 6 6-6"></path>
+                      </svg>
+                    </span>
+                  </div>
+                </Box>
+              </Box>
+              <Box className="flex justify-between items-center" id="fdc">
+                <Box className="flex" id="top">
+                  <span
+                    style={reviewStyle}
+                    className="title-font font-medium text-2xl"
+                  >
+                    ${product?.price}
+                  </span>
+                  <button
+                    style={colorButton}
+                    className="rounded-full w-10 h-10 p-0 border-0 inline-flex items-center justify-center ml-4"
+                  >
+                    <svg
+                      fill={
+                        mode === "dark"
+                          ? theme.palette.primary.main
+                          : theme.palette.neutral.light
+                      }
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      className="w-5 h-5"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
+                    </svg>
+                  </button>
+                </Box>
+                <Box className="flex justify-content-between" id="btns">
+                  <button
+                    ref={buttonRef}
+                    style={{
+                      ...buynowButton,
+                      animation: buttonRef.current
+                        ? "shake 0.5s ease-in-out 3s infinite"
+                        : "",
+                    }}
+                    className="flex ml-auto border-0 py-2 px-6 focus:outline-none rounded-full mr-2 font-semibold"
+                    onClick={() => handleCart(product, true)}
+                  >
+                    BUY NOW
+                  </button>
+                  <button
+                    style={addtocartButton}
+                    className="flex ml-auto border-0 py-2 px-6 focus:outline-none rounded-full font-semibold"
+                    onClick={() => handleCart(product)}
+                  >
+                    ADD TO CART
+                  </button>
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+      ) : (
+        // Fallback if no product found
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "50vh",
+          }}
+        >
+          <Typography
+            variant="h6"
+            style={headerStyle}
+            className="font-semibold"
+          >
+            No product available
+          </Typography>
+        </Box>
       )}
     </section>
   );

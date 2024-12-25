@@ -1,19 +1,21 @@
+import axios from "axios";
+import { toast } from "react-toastify";
 import React, { useEffect, useState } from "react";
 import ProductsCard from "../../Components/ProductsCard/ProductsCard";
 import Categories from "../../Components/Categories/Categories";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-import { useSelector } from "react-redux";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { useSelector, useDispatch } from "react-redux";
+import { setProducts } from "../../state/productSlice.js";
 
 const Products = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.product.products);
   const theme = useTheme();
   const mode = useSelector((state) => state.theme.mode);
   const location = useLocation();
+  const [loading, setLoading] = useState(false);
 
   const sectionStyles = {
     backgroundColor:
@@ -45,20 +47,23 @@ const Products = () => {
   };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get("https://fakestoreapi.com/products");
-        setProducts(response.data);
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        toast.error(
-          "Failed to fetch products!, Check your network connection and refresh."
-        );
-      }
-    };
-    fetchProducts();
-  }, []);
+    if (!products.length) {
+      const fetchProducts = async () => {
+        setLoading(true);
+        try {
+          const response = await axios.get("https://fakestoreapi.com/products");
+          dispatch(setProducts(response.data));
+        } catch (error) {
+          toast.error(
+            "Failed to fetch products! Check your network connection and refresh."
+          );
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchProducts();
+    }
+  }, [dispatch, products.length]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -71,18 +76,20 @@ const Products = () => {
         <Typography
           variant="subtitle2"
           className="tracking-widest font-medium title-font mb-1"
-          style={subtitleStyle}
+          sx={subtitleStyle}
         >
           PRODUCTS
         </Typography>
         <Typography
           variant="h4"
-          style={headerStyle}
           className="font-medium title-font"
+          style={headerStyle}
         >
           ALL PRODUCTS
         </Typography>
       </Box>
+
+      {/* Render based on conditions */}
       {loading ? (
         <Box
           sx={{

@@ -1,29 +1,50 @@
-// state/store.js
 import { configureStore } from "@reduxjs/toolkit";
-import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // Use localStorage as default storage
-import themeReducer from "./themeSlice"; // Import your reducer
+import { persistReducer, persistStore } from "redux-persist";
+import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
+import storage from "redux-persist/lib/storage";
+import themeReducer from "./themeSlice";
+import productReducer from "./productSlice";
+import { createTransform } from "redux-persist";
 
-// Persist configuration
-const persistConfig = {
-  key: "root", // The key under which the state is stored in storage
-  storage, // The storage engine (localStorage here)
+// Transform to handle arrays
+const arrayTransform = createTransform(
+  (inboundState) =>
+    Array.isArray(inboundState) ? [...inboundState] : inboundState,
+  (outboundState) =>
+    Array.isArray(outboundState) ? [...outboundState] : outboundState
+);
+
+// Persist configurations
+const themePersistConfig = {
+  key: "theme",
+  storage,
 };
 
-// Persisted reducer
-const persistedThemeReducer = persistReducer(persistConfig, themeReducer);
+const productPersistConfig = {
+  key: "product",
+  storage,
+  transforms: [arrayTransform],
+  stateReconciler: autoMergeLevel2, 
+};
+
+// Persisted reducers
+const persistedThemeReducer = persistReducer(themePersistConfig, themeReducer);
+const persistedProductReducer = persistReducer(
+  productPersistConfig,
+  productReducer
+);
 
 // Create the Redux store
 const store = configureStore({
   reducer: {
-    theme: persistedThemeReducer, // Wrap only the theme reducer with persist
+    theme: persistedThemeReducer,
+    product: persistedProductReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, // Ignore non-serializable warnings for Redux Persist
+      serializableCheck: false,
     }),
 });
 
-// Export both the store and persistor
 export const persistor = persistStore(store);
 export default store;

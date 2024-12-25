@@ -1,17 +1,19 @@
+import axios from "axios";
+import { toast } from "react-toastify";
 import React, { useEffect, useState } from "react";
 import FeatureCard from "../FeatureCard/FeatureCard";
 import { useLocation } from "react-router-dom";
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { useSelector } from "react-redux";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { setCategories } from "../../state/productSlice.js";
 
 const Categories = () => {
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const categories = useSelector((state) => state.product.categories);
   const theme = useTheme();
   const mode = useSelector((state) => state.theme.mode);
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
 
   const sectionStyles = {
@@ -29,23 +31,33 @@ const Categories = () => {
         : theme.palette.primary.light,
   };
 
+  const headerStyle = {
+    color:
+      mode === "dark"
+        ? theme.palette.neutral.light
+        : theme.palette.primary.light,
+  };
+
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(
-          "https://fakestoreapi.com/products/categories"
-        );
-        setCategories(response.data);
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        toast.error(
-          "Failed to fetch categories,check your network connection and refresh!"
-        );
-      }
-    };
-    fetchCategories();
-  }, []);
+    if (!categories.length) {
+      const fetchCategories = async () => {
+        setLoading(true);
+        try {
+          const response = await axios.get(
+            "https://fakestoreapi.com/products/categories"
+          );
+          dispatch(setCategories(response.data));
+        } catch (error) {
+          toast.error(
+            "Failed to fetch categories, check your network connection and refresh!"
+          );
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchCategories();
+    }
+  }, [dispatch, categories.length]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -59,14 +71,30 @@ const Categories = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            height: "50vh",
           }}
         >
           <CircularProgress sx={elementStyles} />
         </Box>
-      ) : categories?.length > 0 ? (
+      ) : categories.length > 0 ? (
         <FeatureCard cards={categories} />
       ) : (
-        <Box>No categories available</Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "50vh",
+          }}
+        >
+          <Typography
+            variant="h6"
+            style={headerStyle}
+            className="font-semibold"
+          >
+            No categories available
+          </Typography>
+        </Box>
       )}
     </Box>
   );

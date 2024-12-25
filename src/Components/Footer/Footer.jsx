@@ -47,7 +47,12 @@ const Footer = () => {
   const footerLinks = [
     {
       title: "CATEGORIES",
-      links: ["Men", "Women", "Jewelery", "Gadgets"],
+      links: [
+        { name: "Men", path: "/categories/men" },
+        { name: "Women", path: "/categories/women" },
+        { name: "Jewelry", path: "/categories/jewelery" },
+        { name: "Gadgets", path: "/categories/gadgets" },
+      ],
     },
     {
       title: "SUPPORT",
@@ -183,8 +188,12 @@ const Footer = () => {
               {section.title}
             </Typography>
             {section.links.map((link, linkIndex) => (
-              <Link to="#" key={linkIndex} style={linkStyles}>
-                {link}
+              <Link
+                to={typeof link === "object" ? link.path : "#"}
+                key={linkIndex}
+                style={linkStyles}
+              >
+                {typeof link === "object" ? link.name : link}
               </Link>
             ))}
           </Box>

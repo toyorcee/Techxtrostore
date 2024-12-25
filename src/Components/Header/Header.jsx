@@ -17,6 +17,7 @@ import { WbSunny, Nightlight, Menu, Close } from "@mui/icons-material";
 import { toggleMode } from "../../state/themeSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
+import "./Header.css";
 
 const navigations = [
   { name: "Home", path: "/" },

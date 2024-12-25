@@ -1,3 +1,5 @@
+import axios from "axios";
+import { toast } from "react-toastify";
 import React, { useEffect, useState } from "react";
 import Hero from "../../Components/Hero/Hero";
 import Categories from "../../Components/Categories/Categories";
@@ -5,14 +7,14 @@ import ProductsCard from "../../Components/ProductsCard/ProductsCard";
 import StatCard from "../../Components/StatCard/StatCard";
 import { useLocation } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Typography, Box, CircularProgress } from "@mui/material";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { setProducts } from "../../state/productSlice.js";
 
 const Home = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.product.products);
+  const [loading, setLoading] = useState(false);
   const theme = useTheme();
   const mode = useSelector((state) => state.theme.mode);
   const location = useLocation();
@@ -45,26 +47,29 @@ const Home = () => {
   };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get(
-          "https://fakestoreapi.com/products?limit=12"
-        );
-        setProducts(response.data);
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        toast.error(
-          "Failed to fetch products!, Check your network connection and refresh."
-        );
-      }
-    };
-    fetchProducts();
+    if (products.length === 0) {
+      const fetchProducts = async () => {
+        setLoading(true);
+        try {
+          const response = await axios.get(
+            "https://fakestoreapi.com/products?limit=12"
+          );
+          dispatch(setProducts(response.data));
+          setLoading(false);
+        } catch (error) {
+          setLoading(false);
+          toast.error(
+            "Failed to fetch products!, Check your network connection and refresh."
+          );
+        }
+      };
+      fetchProducts();
+    }
   }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [location]);
+  }, [location, products.length]);
 
   return (
     <>
@@ -113,7 +118,7 @@ const Home = () => {
               <Typography
                 variant="h6"
                 style={headerStyle}
-                className="font-semibold"
+                className="font-semibold text-center"
               >
                 No products available
               </Typography>

@@ -1,20 +1,62 @@
+import axios from "axios";
+import { toast } from "react-toastify";
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import ProductsCard from "../../Components/ProductsCard/ProductsCard";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { useSelector } from "react-redux";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { useSelector, useDispatch } from "react-redux";
+import { setCategoryProducts } from "../../state/productSlice.js";
 
 const CategoryProducts = () => {
   const { name } = useParams();
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const theme = useTheme();
+  const dispatch = useDispatch();
+  const categoryProducts = useSelector(
+    (state) => state.product.categoryProducts
+  );
   const mode = useSelector((state) => state.theme.mode);
+  const [loading, setLoading] = useState(false);
+  const theme = useTheme();
   const location = useLocation();
 
+  // Fetch products when category changes
+  useEffect(() => {
+    const fetchProducts = async () => {
+      if (!categoryProducts[name]) {
+        setLoading(true); 
+        try {
+          const response = await axios.get(
+            `https://fakestoreapi.com/products/category/${name}`
+          );
+          const fetchedProducts = response.data;
+
+          // Dispatch the products to Redux
+          dispatch(
+            setCategoryProducts({
+              category: name,
+              products: fetchedProducts,
+            })
+          );
+
+          setLoading(false); 
+        } catch (error) {
+          setLoading(false);
+          toast.error(
+            "Failed to fetch products, check your network connection and refresh!"
+          );
+        }
+      }
+    };
+
+    fetchProducts();
+  }, [name, categoryProducts, dispatch]);
+
+  // Scroll to top when location changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
+  // Styles
   const sectionStyles = {
     backgroundColor:
       mode === "dark"
@@ -37,28 +79,9 @@ const CategoryProducts = () => {
         : theme.palette.primary.light,
   };
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get(
-          `https://fakestoreapi.com/products/category/${name}`
-        );
-        setProducts(response.data);
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        toast.error(
-          "Failed to fetch products, check your network connection and refresh!"
-        );
-      }
-    };
-    fetchProducts();
-  }, [name]);
+  const products = categoryProducts[name] || []; // Get products for current category
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location]);
-
+  // Render
   return (
     <section style={sectionStyles}>
       <Box
@@ -74,7 +97,14 @@ const CategoryProducts = () => {
         ) : products.length > 0 ? (
           <ProductsCard products={products} />
         ) : (
-          <Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "50vh",
+            }}
+          >
             <Typography
               variant="h6"
               style={headerStyle}
