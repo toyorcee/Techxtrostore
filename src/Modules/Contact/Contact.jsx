@@ -1,12 +1,13 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
+import { toast } from "react-toastify";
 import { useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useTheme } from "@mui/material/styles";
 import { useSelector } from "react-redux";
-import { Box, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import "./Contact.css";
 
@@ -26,6 +27,7 @@ const Contact = () => {
   const location = useLocation();
 
   const form = useRef();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
@@ -37,6 +39,7 @@ const Contact = () => {
   });
 
   const sendEmail = (data) => {
+    setIsSubmitting(true); // Disable the button and show the spinner
     emailjs
       .sendForm(
         "service_0lyx3oi",
@@ -48,12 +51,18 @@ const Contact = () => {
         (result) => {
           console.log(result.text);
           reset(); // Reset the form after successful submission
-          alert("Email Sent");
+          toast.success(
+            "Thank you for reaching out to customer care. We will get back to you shortly."
+          );
         },
         (error) => {
           console.error(error.text);
+          toast.error("Something went wrong. Please try again later.");
         }
-      );
+      )
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   const formFields = [
@@ -157,6 +166,13 @@ const Contact = () => {
     boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
   };
 
+  const elementStyles = {
+    color:
+      mode === "dark"
+        ? theme.palette.neutral.light
+        : theme.palette.primary.light,
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);
@@ -184,7 +200,11 @@ const Contact = () => {
       >
         <Box className="lg:w-1/2 md:w-2/3 mx-auto">
           <Box className="-m-2">
-            <form className="contactForm" onSubmit={handleSubmit(sendEmail)}>
+            <form
+              ref={form}
+              className="contactForm"
+              onSubmit={handleSubmit(sendEmail)}
+            >
               {formFields.map((field) => (
                 <Box key={field.id} className="p-2 w-full">
                   <Box className="relative">
@@ -205,10 +225,6 @@ const Contact = () => {
                             formStyles.inputStyles.backgroundColor,
                           color: formStyles.inputStyles.color,
                           borderColor: formStyles.inputStyles.borderColor,
-                          focus: {
-                            borderColor: formStyles.focusStyles.borderColor,
-                            boxShadow: `0 0 0 2px ${formStyles.focusStyles.ringColor}`,
-                          },
                         }}
                       ></textarea>
                     ) : (
@@ -223,10 +239,6 @@ const Contact = () => {
                             formStyles.inputStyles.backgroundColor,
                           color: formStyles.inputStyles.color,
                           borderColor: formStyles.inputStyles.borderColor,
-                          focus: {
-                            borderColor: formStyles.focusStyles.borderColor,
-                            boxShadow: `0 0 0 2px ${formStyles.focusStyles.ringColor}`,
-                          },
                         }}
                       />
                     )}
@@ -240,10 +252,16 @@ const Contact = () => {
               ))}
               <Box className="p-2 w-full">
                 <button
+                  type="submit"
+                  disabled={isSubmitting}
                   style={submitButtonStyle}
                   className="flex mx-auto py-2 px-3 focus:outline-none rounded text-base"
                 >
-                  SEND MESSAGE
+                  {isSubmitting ? (
+                    <CircularProgress style={submitButtonStyle} size={20} />
+                  ) : (
+                    "SEND MESSAGE"
+                  )}
                 </button>
               </Box>
             </form>
