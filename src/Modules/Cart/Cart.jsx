@@ -42,7 +42,7 @@ const Cart = () => {
       if (item.id === id) {
         return {
           ...item,
-          quantity: item.quantity - 1,
+          quantity: item.quantity > 0 ? item.quantity - 1 : 0,
         };
       }
       return item;
@@ -175,36 +175,57 @@ const Cart = () => {
                 {carts?.length} {carts?.length === 1 ? "Item" : "Items"}
               </Typography>
             </Box>
-            <Box className="flex mt-10 mb-5">
+            <Box className="flex justify-center items-center mt-10 mb-5">
               <Typography
                 variant="h6"
-                style={headerStyle}
-                className="font-semibold text-center uppercase w-2/5"
+                sx={{
+                  fontSize: {
+                    xs: "0.65rem", 
+                    sm: "0.875rem",
+                  },
+                }}
+                className="font-semibold text-center uppercase w-2/5 px-2"
               >
                 Product details
               </Typography>
               <Typography
                 variant="h6"
-                style={headerStyle}
-                className="font-semibold text-center uppercase w-1/5"
+                sx={{
+                  fontSize: {
+                    xs: "0.65rem", 
+                    sm: "0.875rem",
+                  },
+                }}
+                className="font-semibold text-center uppercase w-1/5 px-2"
               >
                 Quantity
               </Typography>
               <Typography
                 variant="h6"
-                style={headerStyle}
-                className="font-semibold text-center uppercase w-1/5"
+                sx={{
+                  fontSize: {
+                    xs: "0.65rem", 
+                    sm: "0.875rem",
+                  },
+                }}
+                className="font-semibold text-center uppercase w-1/5 px-2"
               >
                 Price
               </Typography>
               <Typography
                 variant="h6"
-                style={headerStyle}
-                className="font-semibold text-center uppercase w-1/5"
+                sx={{
+                  fontSize: {
+                    xs: "0.65rem", 
+                    sm: "0.875rem", 
+                  },
+                }}
+                className="font-semibold text-center uppercase w-1/5 px-2"
               >
                 Total
               </Typography>
             </Box>
+
             {carts?.map((cart) => {
               return (
                 <Box className="flex items-center -mx-8 px-6 py-5">
